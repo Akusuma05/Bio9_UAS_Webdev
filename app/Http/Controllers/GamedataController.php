@@ -10,8 +10,8 @@ class GamedataController extends Controller
     
     public function getGameData($id)
     {
-        $gamedata = gamedata::all()->where('student_id_gamedata', $id);
-        return response()->json($gamedata, 200);
+       $gamedata = gamedata::where('student_id_gamedata',$id)->first();
+       return response()->json($gamedata, 200);
     }
 
     /**

@@ -4,25 +4,37 @@ let jawaban_salah1;
 let jawaban_salah2;
 let jawaban_salah3;
 
-var score = 0;
+var total_damage = 0;
 var benar = 0;
 var randomPertanyaan;
 
-// $("#score").html(score);
-
 //Saat Ngeload
 $(document).ready(function() {
-    GetGameData();
-    // PertanyaanListPertama();
+    GetUserData();
+    PertanyaanListPertama();
 });
 
-
-function GetGameData(){
+//Function Get Game Data
+function GetUserData(){
     $.ajax({
         type: "GET",
-        url: "http://127.0.0.1:8000/getGameData/1",
-        success: function (data1) {
-            $("#score").html(data1.current_damage);
+        dataType: 'json',
+        url: "http://127.0.0.1:8000/profiledata",
+        success: function (data) {
+            GetGameData(data.id);
+        }
+    });
+}
+
+//Function Get Game Data
+function GetGameData($id){
+    $.ajax({
+        type: "GET",
+        dataType: 'json',
+        url: "http://127.0.0.1:8000/getGameData/"+$id,
+        success: function (data) {
+            total_damage = data.total_damage;
+            $("#total_damage").html(total_damage);
         }
     });
 }
@@ -93,8 +105,8 @@ function klikjawaban(){
         $("#jawaban1").click(function(){
             if (button_pressed == 1){
             }else{
-                score += 1;
-                // $("#score").html(score);
+                total_damage += 1;
+                $("#total_damage").html(total_damage);
                 button_pressed = 1;
                 PertanyaanListPertama();
             }
@@ -138,8 +150,8 @@ function klikjawaban(){
         $("#jawaban2").click(function(){
             if (button_pressed == 1){
             }else{
-                score += 1;
-                // $("#score").html(score);
+                total_damage += 1;
+                $("#total_damage").html(total_damage);
                 button_pressed = 1;
                 PertanyaanListPertama();
             }
@@ -183,8 +195,8 @@ function klikjawaban(){
         $("#jawaban3").click(function(){
             if (button_pressed == 1){
             }else{
-                score += 1;
-                // $("#score").html(score);
+                total_damage += 1;
+                $("#total_damage").html(total_damage);
                 button_pressed = 1;
                 PertanyaanListPertama();
             }
@@ -228,8 +240,8 @@ function klikjawaban(){
         $("#jawaban4").click(function(){
             if (button_pressed == 1){
             }else{
-                score += 1;
-                // $("#score").html(score);
+                total_damage += 1;
+                $("#total_damage").html(total_damage);
                 button_pressed = 1;
                 PertanyaanListPertama();
             }

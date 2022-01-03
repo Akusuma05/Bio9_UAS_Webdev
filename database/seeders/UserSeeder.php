@@ -27,5 +27,18 @@ class UserSeeder extends Seeder
             'created_at' => \Carbon\Carbon::now(),
             'updated_at' => \Carbon\Carbon::now(),
         ]);
+
+        DB::table('users')->insert([
+            'email' => 'user@gmail.com',
+            'password' => Hash::make('user1234'),
+            'username' => 'User',
+            'role' => 'user',
+            'name' => 'User',
+            'school' => 'UC',
+            'city' => 'Surabaya',
+            'birthyear' => 2002,
+            'created_at' => \Carbon\Carbon::now(),
+            'updated_at' => \Carbon\Carbon::now(),
+        ]);
     }
 }
