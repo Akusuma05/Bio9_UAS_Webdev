@@ -32,4 +32,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('/getPertanyaan/{id}','App\Http\Controllers\PertanyaanController@getPertanyaan');
+
+    Route::get('/getGameData/{id}','App\Http\Controllers\GamedataController@getGameData');
 });

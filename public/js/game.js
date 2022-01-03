@@ -8,12 +8,24 @@ var score = 0;
 var benar = 0;
 var randomPertanyaan;
 
-$("#score").html(score);
+// $("#score").html(score);
 
 //Saat Ngeload
 $(document).ready(function() {
-    PertanyaanListPertama();
+    GetGameData();
+    // PertanyaanListPertama();
 });
+
+
+function GetGameData(){
+    $.ajax({
+        type: "GET",
+        url: "http://127.0.0.1:8000/getGameData/1",
+        success: function (data1) {
+            $("#score").html(data1.current_damage);
+        }
+    });
+}
 
 //Function Get Pertanyaan Dari Database dan Mendisplay
 function PertanyaanListPertama(){
@@ -28,7 +40,7 @@ function PertanyaanListPertama(){
         url: "http://127.0.0.1:8000/getPertanyaan/" + random,       
         success: function (data) {
             $("#question").html(data.pertanyaan);
-            
+
             jawaban_benar = data.jawaban_benar;
             jawaban_salah1 = data.jawaban_salah1;
             jawaban_salah2 = data.jawaban_salah2;
@@ -82,7 +94,7 @@ function klikjawaban(){
             if (button_pressed == 1){
             }else{
                 score += 1;
-                $("#score").html(score);
+                // $("#score").html(score);
                 button_pressed = 1;
                 PertanyaanListPertama();
             }
@@ -127,7 +139,7 @@ function klikjawaban(){
             if (button_pressed == 1){
             }else{
                 score += 1;
-                $("#score").html(score);
+                // $("#score").html(score);
                 button_pressed = 1;
                 PertanyaanListPertama();
             }
@@ -172,7 +184,7 @@ function klikjawaban(){
             if (button_pressed == 1){
             }else{
                 score += 1;
-                $("#score").html(score);
+                // $("#score").html(score);
                 button_pressed = 1;
                 PertanyaanListPertama();
             }
@@ -217,7 +229,7 @@ function klikjawaban(){
             if (button_pressed == 1){
             }else{
                 score += 1;
-                $("#score").html(score);
+                // $("#score").html(score);
                 button_pressed = 1;
                 PertanyaanListPertama();
             }
