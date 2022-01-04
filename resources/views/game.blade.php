@@ -7,6 +7,37 @@
         {{-- HUD untuk Health dan Score --}}
         
         <div id="hud">
+
+            <div class="hud-item">
+                <p class="hud-prefix">
+                    Time
+                </p>
+                <h1 class="hud-main-text" id="time">
+                    0
+                </h1>
+            </div>
+
+            <button id="pause">Pause</button>
+            <button id="resume">Resume</button>
+
+            <div class="hud-item">
+                <p class="hud-prefix">
+                    Health User
+                </p>
+                <h1 class="hud-main-text" id="health_user">
+                    0
+                </h1>
+                <img width="30%" id="wizard" src="{{URL::asset('/image/wizard_idle.gif')}}"></img>
+            </div>
+
+            <div class="hud-item">
+                <p class="hud-prefix">
+                    Money
+                </p>
+                <h1 class="hud-main-text" id="money">
+                    0
+                </h1>
+            </div>
             
             <div class="hud-item">
                 <p class="hud-prefix">
@@ -17,7 +48,6 @@
                 </h1>
             </div>
 
-
             <div class="hud-item">
                 <p id="progressText" class="hud-prefix">
                     Monster Health
@@ -25,6 +55,7 @@
                 <div id="progressBar">
                     <div id="progressBarFull"></div>
                 </div>
+                <img width="30%" id="monster" src="{{URL::asset('/image/monster_idle.gif')}}"></img>
             </div>
 
         </div>
