@@ -1,25 +1,56 @@
 @extends('layouts.master')
 
 @section('main_content')
-<div class="container">
-    <div id="game" class="justify-center flex-column">
+<div id="container">
+    
+    {{-- Div Class Shop --}}
+    <div id="shop">
 
-        {{-- HUD untuk Health dan Score --}}
-        
+        {{-- Div Button Shop Pertama --}}
+        <div class="choice-container" id="shop1div">
+            <p class="choice-prefix">$100</p>
+            <p id="shop1" class="choice-text" data-number="1">Upgrade Damage + 15</p>
+        </div>
+
+        {{-- Div Button Shop Kedua --}}
+        <div class="choice-container">
+            <p class="choice-prefix">$1000</p>
+            <p id="shop2" class="choice-text" data-number="2">Health +1</p>
+        </div>
+
+        {{-- Div Button Shop Ketiga --}}
+        <div class="choice-container" id="skipdiv">
+            <p id="skip" class="choice-text" data-number="2">Skip</p>
+        </div>
+    </div>
+
+    {{-- Div Class Permainan --}}
+    <div id="display">
+
+        {{-- Div Class HUD --}}
         <div id="hud">
 
-            <div class="hud-item">
+            {{-- Div Class Time --}}
+            <div class="hud-item" id="timediv">
                 <p class="hud-prefix">
                     Time
                 </p>
                 <h1 class="hud-main-text" id="time">
-                    0
+                    10:00
                 </h1>
             </div>
 
-            <button id="pause">Pause</button>
-            <button id="resume">Resume</button>
+            {{-- Div pause --}}
+            <div id="pausediv">
+                <button class="btn" id="pause">Pause</button>
+            </div>
 
+            {{-- Div resume --}}
+            <div id="resumediv">
+                <button class="btn" id="resume">Resume</button>
+            </div>              
+
+            {{-- Div Health User --}}
             <div class="hud-item">
                 <p class="hud-prefix">
                     Health User
@@ -27,9 +58,9 @@
                 <h1 class="hud-main-text" id="health_user">
                     0
                 </h1>
-                <img width="30%" id="wizard" src="{{URL::asset('/image/wizard_idle.gif')}}"></img>
             </div>
 
+            {{-- Div Money --}}
             <div class="hud-item">
                 <p class="hud-prefix">
                     Money
@@ -39,6 +70,7 @@
                 </h1>
             </div>
             
+            {{-- Div Total Damage --}}
             <div class="hud-item">
                 <p class="hud-prefix">
                     Total Damage
@@ -48,23 +80,43 @@
                 </h1>
             </div>
 
-            <div class="hud-item">
-                <p id="progressText" class="hud-prefix">
-                    Monster Health
-                </p>
-                <div id="progressBar">
-                    <div id="progressBarFull"></div>
-                </div>
-                <img width="30%" id="monster" src="{{URL::asset('/image/monster_idle.gif')}}"></img>
-            </div>
+            
+            
 
         </div>
 
-        {{-- Text pertanyaan --}}
-        <h1 id="question">Text pertanyaan</h1>
+        {{-- Div Text pertanyaan --}}
+        <div id="questiondiv">
+            <h1 id="question">Text pertanyaan</h1>
+        </div>
+        
 
+        {{-- Div Avatar --}}
+        <div id="avatar">
+            <div id="wizarddiv">
+                <img width="30%" id="wizard" src="{{URL::asset('/image/wizard_idle.gif')}}"></img>
+            </div>
+            <div id="monsterdiv">
+                {{-- Div Health Monster --}}
+                <div class="hud-item" id="health_bar_div">
+                    <p id="progressText" class="hud-prefix">
+                        Monster Health
+                    </p>
+                    <div id="progressBar">
+                        <div id="progressBarFull"></div>
+                    </div>
+                </div>
+                <img width="30%" id="monster" src="{{URL::asset('/image/monster_idle.gif')}}"></img>
+            </div>
+        </div>
+    
+    </div>
+
+
+    {{-- Div Jawaban --}}
+    <div id="jawaban">
         {{-- PilGan Jawaban --}}
-        <div class="choice-container">
+        <div class="choice-container" id="jawaban1div">
             <p class="choice-prefix">A</p>
             <p id="jawaban1" class="choice-text" data-number="1">Choice</p>
         </div>
@@ -80,8 +132,8 @@
             <p class="choice-prefix">D</p>
             <p id="jawaban4" class="choice-text" data-number="4">Choice 4</p>
         </div>
-
     </div>
+    
 </div>
 
 {{-- Javascript --}}

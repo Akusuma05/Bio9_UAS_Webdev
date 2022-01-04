@@ -13,16 +13,21 @@ var money = 0;
 var current_health_monster = health_monster;
 var randomPertanyaan;
 var randomMonster = 1;
-var minutes = 10;
-var seconds = 0;
+var timestart = 1;
 
 //Saat Ngeload
 $(document).ready(function() {
+    //Hidden Button Resume And Show Pause
+    document.getElementById('pause').style.visibility = 'visible';
+    document.getElementById('resume').style.visibility = 'hidden';
+
+    //Monster Health Bar 100%
     progressBarFull.style.width = '100%';
-    var tenMinutes = 600,
-    display = document.querySelector('#time');
-    startTimer(tenMinutes, display);
+
+    //Get User Data
     GetUserData();
+
+    //Get List Pertanyaan
     PertanyaanListPertama();
 });
 
@@ -49,24 +54,61 @@ function GetGameData($id){
             current_damage = data.current_damage;
             health_user = data.health_left;
             money = data.money;
+
+            //Start Timer
+            var seconds = data.time_left,
+            display = document.querySelector('#time');
+            startTimer(seconds, display);
+
             $("#health_user").html(health_user);
             $("#total_damage").html(total_damage);
         }
     });
 }
 
+//Function timer
 function startTimer(duration, display) {
     var timer = duration, minutes, seconds;
     let runcountdown = setInterval(countdown, 1000);
 
+    //Button Pause Di Tekan
     $("#pause").click(function(){
         clearInterval(runcountdown);
-        duration = (minutes*60) + seconds;
+        duration = ((minutes*60) + seconds)-1;
+
+        //Hide Button Pause, Display Resume
+        document.getElementById('pause').style.visibility = 'hidden';
+        document.getElementById('resume').style.visibility = 'visible';
+        
+        //Jawaban dan Pertanyaan di Hidden
+        document.getElementById('jawaban1').style.visibility = 'hidden';
+        document.getElementById('jawaban2').style.visibility = 'hidden';
+        document.getElementById('jawaban3').style.visibility = 'hidden';
+        document.getElementById('jawaban4').style.visibility = 'hidden';
+        document.getElementById('question').style.visibility = 'hidden';
     });
 
+    //Button Resume di Tekan
     $("#resume").click(function(){
-        runcountdown = setInterval(countdown, 1000);
-        startTimer(duration, display);
+        var resumeTimer = 0;
+        if(resumeTimer == 1){
+
+        }else{
+            resumeTimer = 1;
+            runcountdown = setInterval(countdown, 1000);
+            startTimer(duration, display);
+    
+            //Hide Button Resume, Display Pause
+            document.getElementById('pause').style.visibility = 'visible';
+            document.getElementById('resume').style.visibility = 'hidden';
+    
+            //Jawaban and Pertanyaan di Visible
+            document.getElementById('jawaban1').style.visibility = 'visible';
+            document.getElementById('jawaban2').style.visibility = 'visible';
+            document.getElementById('jawaban3').style.visibility = 'visible';
+            document.getElementById('jawaban4').style.visibility = 'visible';
+            document.getElementById('question').style.visibility = 'visible';
+        }
     });
 
     function countdown() {
@@ -160,6 +202,55 @@ function klikjawaban(){
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
                 if(current_health_monster <= 0){
+                    //Shop
+                    //Jawaban dan Pertanyaan di Hidden
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    document.getElementById('question').style.visibility = 'hidden';
+
+                    $("#shop1").click(function(){
+                        if(money>=100){
+                            current_damage += 15;
+                            money -= 100
+                            $("#money").html(money);
+                            document.getElementById('jawaban1').style.visibility = 'visible';
+                            document.getElementById('jawaban2').style.visibility = 'visible';
+                            document.getElementById('jawaban3').style.visibility = 'visible';
+                            document.getElementById('jawaban4').style.visibility = 'visible';
+                            document.getElementById('question').style.visibility = 'visible';
+                        }
+                    })
+
+                    $("#shop2").click(function(){
+                        if(money>=200){
+                            if(health_user == 3){
+
+                            }else{
+                                money -= 200
+                                health_user ++;
+                                $("#health_user").html(health_user);
+                                $("#money").html(money);
+                                document.getElementById('jawaban1').style.visibility = 'visible';
+                                document.getElementById('jawaban2').style.visibility = 'visible';
+                                document.getElementById('jawaban3').style.visibility = 'visible';
+                                document.getElementById('jawaban4').style.visibility = 'visible';
+                                document.getElementById('question').style.visibility = 'visible';
+                            }
+                            
+                        }
+                    })
+
+                    $("#skip").click(function(){
+                        document.getElementById('jawaban1').style.visibility = 'visible';
+                        document.getElementById('jawaban2').style.visibility = 'visible';
+                        document.getElementById('jawaban3').style.visibility = 'visible';
+                        document.getElementById('jawaban4').style.visibility = 'visible';
+                        document.getElementById('question').style.visibility = 'visible';
+                    })
+
+
                     //game over
                     if(randomMonster == 1){
                         $("#monster").attr('src',"/image/monster_death.gif");
@@ -449,6 +540,46 @@ function klikjawaban(){
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
                 if(current_health_monster <= 0){
+
+                    //Shop
+                    //Jawaban dan Pertanyaan di Hidden
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    document.getElementById('question').style.visibility = 'hidden';
+
+                    $("#shop1").click(function(){
+                        if(money>=100){
+                            current_damage += 15;
+                            money -= 100
+                            $("#money").html(money);
+                            document.getElementById('jawaban1').style.visibility = 'visible';
+                            document.getElementById('jawaban2').style.visibility = 'visible';
+                            document.getElementById('jawaban3').style.visibility = 'visible';
+                            document.getElementById('jawaban4').style.visibility = 'visible';
+                            document.getElementById('question').style.visibility = 'visible';
+                        }
+                    })
+
+                    $("#shop2").click(function(){
+                        if(money>=200){
+                            if(health_user == 3){
+
+                            }else{
+                                money -= 200
+                                health_user ++;
+                                $("#health_user").html(health_user);
+                                $("#money").html(money);
+                                document.getElementById('jawaban1').style.visibility = 'visible';
+                                document.getElementById('jawaban2').style.visibility = 'visible';
+                                document.getElementById('jawaban3').style.visibility = 'visible';
+                                document.getElementById('jawaban4').style.visibility = 'visible';
+                                document.getElementById('question').style.visibility = 'visible';
+                            }
+                            
+                        }
+                    })
                     //game over
                     if(randomMonster == 1){
                         $("#monster").attr('src',"/image/monster_death.gif");
@@ -738,6 +869,46 @@ function klikjawaban(){
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
                 if(current_health_monster <= 0){
+
+                    //Shop
+                    //Jawaban dan Pertanyaan di Hidden
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    document.getElementById('question').style.visibility = 'hidden';
+
+                    $("#shop1").click(function(){
+                        if(money>=100){
+                            current_damage += 15;
+                            money -= 100
+                            $("#money").html(money);
+                            document.getElementById('jawaban1').style.visibility = 'visible';
+                            document.getElementById('jawaban2').style.visibility = 'visible';
+                            document.getElementById('jawaban3').style.visibility = 'visible';
+                            document.getElementById('jawaban4').style.visibility = 'visible';
+                            document.getElementById('question').style.visibility = 'visible';
+                        }
+                    })
+
+                    $("#shop2").click(function(){
+                        if(money>=200){
+                            if(health_user == 3){
+
+                            }else{
+                                money -= 200
+                                health_user ++;
+                                $("#health_user").html(health_user);
+                                $("#money").html(money);
+                                document.getElementById('jawaban1').style.visibility = 'visible';
+                                document.getElementById('jawaban2').style.visibility = 'visible';
+                                document.getElementById('jawaban3').style.visibility = 'visible';
+                                document.getElementById('jawaban4').style.visibility = 'visible';
+                                document.getElementById('question').style.visibility = 'visible';
+                            }
+                            
+                        }
+                    })
                     //game over
                     if(randomMonster == 1){
                         $("#monster").attr('src',"/image/monster_death.gif");
@@ -1027,6 +1198,46 @@ function klikjawaban(){
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
                 if(current_health_monster <= 0){
+
+                    //Shop
+                    //Jawaban dan Pertanyaan di Hidden
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    document.getElementById('question').style.visibility = 'hidden';
+
+                    $("#shop1").click(function(){
+                        if(money>=100){
+                            current_damage += 15;
+                            money -= 100
+                            $("#money").html(money);
+                            document.getElementById('jawaban1').style.visibility = 'visible';
+                            document.getElementById('jawaban2').style.visibility = 'visible';
+                            document.getElementById('jawaban3').style.visibility = 'visible';
+                            document.getElementById('jawaban4').style.visibility = 'visible';
+                            document.getElementById('question').style.visibility = 'visible';
+                        }
+                    })
+
+                    $("#shop2").click(function(){
+                        if(money>=200){
+                            if(health_user == 3){
+
+                            }else{
+                                money -= 200
+                                health_user ++;
+                                $("#health_user").html(health_user);
+                                $("#money").html(money);
+                                document.getElementById('jawaban1').style.visibility = 'visible';
+                                document.getElementById('jawaban2').style.visibility = 'visible';
+                                document.getElementById('jawaban3').style.visibility = 'visible';
+                                document.getElementById('jawaban4').style.visibility = 'visible';
+                                document.getElementById('question').style.visibility = 'visible';
+                            }
+                            
+                        }
+                    })
                     //game over
                     if(randomMonster == 1){
                         $("#monster").attr('src',"/image/monster_death.gif");
