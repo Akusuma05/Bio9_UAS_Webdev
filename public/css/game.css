@@ -10,6 +10,16 @@
     margin-top: 11%; 
 }
 
+#healthbardiv{
+    height: 10%;
+}
+
+#healthmonster{
+    margin-right: 7%;
+    float: right;
+    
+}
+
 #skipdiv{
     margin-left: 32%;
     width: 30%;
@@ -47,7 +57,7 @@
 #questiondiv{
     text-align: center;
     text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000;
-    height: 45%;
+    height: 35%;
 }
 
 #avatar{

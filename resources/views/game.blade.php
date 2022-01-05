@@ -14,7 +14,7 @@
 
         {{-- Div Button Shop Kedua --}}
         <div class="choice-container">
-            <p class="choice-prefix">$1000</p>
+            <p class="choice-prefix">$200</p>
             <p id="shop2" class="choice-text" data-number="2">Health +1</p>
         </div>
 
@@ -91,13 +91,8 @@
         </div>
         
 
-        {{-- Div Avatar --}}
-        <div id="avatar">
-            <div id="wizarddiv">
-                <img width="30%" id="wizard" src="{{URL::asset('/image/wizard_idle.gif')}}"></img>
-            </div>
-            <div id="monsterdiv">
-                {{-- Div Health Monster --}}
+        <div id="healthbardiv">
+            <div id="healthmonster">
                 <div class="hud-item" id="health_bar_div">
                     <p id="progressText" class="hud-prefix">
                         Monster Health
@@ -106,6 +101,17 @@
                         <div id="progressBarFull"></div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        {{-- Div Avatar --}}
+        <div id="avatar">
+            <div id="wizarddiv">
+                <img width="30%" id="wizard" src="{{URL::asset('/image/wizard_idle.gif')}}"></img>
+            </div>
+            <div id="monsterdiv">
+                {{-- Div Health Monster --}}
+                
                 <img width="30%" id="monster" src="{{URL::asset('/image/monster_idle.gif')}}"></img>
             </div>
         </div>

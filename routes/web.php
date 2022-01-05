@@ -36,7 +36,17 @@ Route::middleware(['auth'])->group(function () {
         return view('menu');
     });
 
+    Route::get('/leaderboard', function () {
+        return view('leaderboard');
+    });
+
     Route::get('/getPertanyaan/{id}','App\Http\Controllers\PertanyaanController@getPertanyaan');
 
     Route::get('/getGameData/{id}','App\Http\Controllers\GamedataController@getGameData');
+
+    Route::get('/getLeaderboard', 'App\Http\Controllers\LeaderboardController@getTop10Leaderboard');
+
+    Route::post('/postLeaderboard', 'App\Http\Controllers\LeaderboardController@store');
+
+    Route::post('/csrf', 'App\Http\Controllers\LeaderboardController@index');
 });

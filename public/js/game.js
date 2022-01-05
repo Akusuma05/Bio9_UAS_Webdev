@@ -4,6 +4,8 @@ let jawaban_salah1;
 let jawaban_salah2;
 let jawaban_salah3;
 
+let player_name;
+
 var total_damage = 0;
 var benar = 0;
 var current_damage = 0;
@@ -39,6 +41,7 @@ function GetUserData(){
         url: "http://127.0.0.1:8000/profiledata",
         success: function (data) {
             GetGameData(data.id);
+            player_name = data.name;
         }
     });
 }
@@ -210,48 +213,8 @@ function klikjawaban(){
                     document.getElementById('jawaban4').style.visibility = 'hidden';
                     document.getElementById('question').style.visibility = 'hidden';
 
-                    $("#shop1").click(function(){
-                        if(money>=100){
-                            current_damage += 15;
-                            money -= 100
-                            $("#money").html(money);
-                            document.getElementById('jawaban1').style.visibility = 'visible';
-                            document.getElementById('jawaban2').style.visibility = 'visible';
-                            document.getElementById('jawaban3').style.visibility = 'visible';
-                            document.getElementById('jawaban4').style.visibility = 'visible';
-                            document.getElementById('question').style.visibility = 'visible';
-                        }
-                    })
-
-                    $("#shop2").click(function(){
-                        if(money>=200){
-                            if(health_user == 3){
-
-                            }else{
-                                money -= 200
-                                health_user ++;
-                                $("#health_user").html(health_user);
-                                $("#money").html(money);
-                                document.getElementById('jawaban1').style.visibility = 'visible';
-                                document.getElementById('jawaban2').style.visibility = 'visible';
-                                document.getElementById('jawaban3').style.visibility = 'visible';
-                                document.getElementById('jawaban4').style.visibility = 'visible';
-                                document.getElementById('question').style.visibility = 'visible';
-                            }
-                            
-                        }
-                    })
-
-                    $("#skip").click(function(){
-                        document.getElementById('jawaban1').style.visibility = 'visible';
-                        document.getElementById('jawaban2').style.visibility = 'visible';
-                        document.getElementById('jawaban3').style.visibility = 'visible';
-                        document.getElementById('jawaban4').style.visibility = 'visible';
-                        document.getElementById('question').style.visibility = 'visible';
-                    })
-
-
-                    //game over
+                   shop();
+                   
                     if(randomMonster == 1){
                         $("#monster").attr('src',"/image/monster_death.gif");
                         setTimeout(function(){
@@ -378,14 +341,33 @@ function klikjawaban(){
                 $("#health_user").html(health_user);
                 $("#jawaban2").html("salah");
                 if(health_user == 0){
-                    //game over
+                    
+                    document.getElementById('shop1').style.visibility = 'hidden';
+                    document.getElementById('shop2').style.visibility = 'hidden';
+                    document.getElementById('skip').style.visibility = 'hidden';
+                    document.getElementById('pause').style.visibility = 'hidden';
+                    document.getElementById('resume').style.visibility = 'hidden';
+
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    $("#question").html("Game Over You Died");
+
+                    PostLeaderboard();
+
                     $("#wizard").attr('src',"/image/wizard_death.gif");
                     setTimeout(function(){
                         $("#wizard").attr('src',"/image/wizard_death_png.gif");
                     }, 700);
+
+                    setTimeout(function(){
+                        location.replace("http://127.0.0.1:8000/leaderboard");
+                    }, 5000);
+                }else{
+                    button_pressed = 1;
+                    PertanyaanListPertama(); 
                 }
-                button_pressed = 1;
-                PertanyaanListPertama(); 
             }
         })
 
@@ -423,14 +405,33 @@ function klikjawaban(){
                 $("#health_user").html(health_user);
                 $("#jawaban3").html("salah");
                 if(health_user == 0){
-                    //game over
+                    
+                    document.getElementById('shop1').style.visibility = 'hidden';
+                    document.getElementById('shop2').style.visibility = 'hidden';
+                    document.getElementById('skip').style.visibility = 'hidden';
+                    document.getElementById('pause').style.visibility = 'hidden';
+                    document.getElementById('resume').style.visibility = 'hidden';
+
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    $("#question").html("Game Over You Died");
+
+                    PostLeaderboard();
+
                     $("#wizard").attr('src',"/image/wizard_death.gif");
                     setTimeout(function(){
                         $("#wizard").attr('src',"/image/wizard_death_png.gif");
                     }, 700);
+
+                    setTimeout(function(){
+                        location.replace("http://127.0.0.1:8000/leaderboard");
+                    }, 5000);
+                }else{
+                    button_pressed = 1;
+                    PertanyaanListPertama(); 
                 }
-                button_pressed = 1;
-                PertanyaanListPertama(); 
             }
         })
 
@@ -468,14 +469,33 @@ function klikjawaban(){
                 $("#health_user").html(health_user);
                 $("#jawaban4").html("salah");
                 if(health_user == 0){
-                    //game over
+                    
+                    document.getElementById('shop1').style.visibility = 'hidden';
+                    document.getElementById('shop2').style.visibility = 'hidden';
+                    document.getElementById('skip').style.visibility = 'hidden';
+                    document.getElementById('pause').style.visibility = 'hidden';
+                    document.getElementById('resume').style.visibility = 'hidden';
+
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    $("#question").html("Game Over You Died");
+
+                    PostLeaderboard();
+
                     $("#wizard").attr('src',"/image/wizard_death.gif");
                     setTimeout(function(){
                         $("#wizard").attr('src',"/image/wizard_death_png.gif");
                     }, 700);
+
+                    setTimeout(function(){
+                        location.replace("http://127.0.0.1:8000/leaderboard");
+                    }, 5000);
+                }else{
+                    button_pressed = 1;
+                    PertanyaanListPertama(); 
                 }
-                button_pressed = 1;
-                PertanyaanListPertama(); 
             }
         })
 
@@ -516,14 +536,33 @@ function klikjawaban(){
                 $("#health_user").html(health_user);
                 $("#jawaban1").html("salah");
                 if(health_user == 0){
-                    //game over
+                    
+                    document.getElementById('shop1').style.visibility = 'hidden';
+                    document.getElementById('shop2').style.visibility = 'hidden';
+                    document.getElementById('skip').style.visibility = 'hidden';
+                    document.getElementById('pause').style.visibility = 'hidden';
+                    document.getElementById('resume').style.visibility = 'hidden';
+
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    $("#question").html("Game Over You Died");
+
+                    PostLeaderboard();
+
                     $("#wizard").attr('src',"/image/wizard_death.gif");
                     setTimeout(function(){
                         $("#wizard").attr('src',"/image/wizard_death_png.gif");
                     }, 700);
+
+                    setTimeout(function(){
+                        location.replace("http://127.0.0.1:8000/leaderboard");
+                    }, 5000);
+                }else{
+                    button_pressed = 1;
+                    PertanyaanListPertama(); 
                 }
-                button_pressed = 1;
-                PertanyaanListPertama(); 
             }
         })
 
@@ -549,37 +588,8 @@ function klikjawaban(){
                     document.getElementById('jawaban4').style.visibility = 'hidden';
                     document.getElementById('question').style.visibility = 'hidden';
 
-                    $("#shop1").click(function(){
-                        if(money>=100){
-                            current_damage += 15;
-                            money -= 100
-                            $("#money").html(money);
-                            document.getElementById('jawaban1').style.visibility = 'visible';
-                            document.getElementById('jawaban2').style.visibility = 'visible';
-                            document.getElementById('jawaban3').style.visibility = 'visible';
-                            document.getElementById('jawaban4').style.visibility = 'visible';
-                            document.getElementById('question').style.visibility = 'visible';
-                        }
-                    })
+                    shop();
 
-                    $("#shop2").click(function(){
-                        if(money>=200){
-                            if(health_user == 3){
-
-                            }else{
-                                money -= 200
-                                health_user ++;
-                                $("#health_user").html(health_user);
-                                $("#money").html(money);
-                                document.getElementById('jawaban1').style.visibility = 'visible';
-                                document.getElementById('jawaban2').style.visibility = 'visible';
-                                document.getElementById('jawaban3').style.visibility = 'visible';
-                                document.getElementById('jawaban4').style.visibility = 'visible';
-                                document.getElementById('question').style.visibility = 'visible';
-                            }
-                            
-                        }
-                    })
                     //game over
                     if(randomMonster == 1){
                         $("#monster").attr('src',"/image/monster_death.gif");
@@ -707,14 +717,33 @@ function klikjawaban(){
                 $("#health_user").html(health_user);
                 $("#jawaban3").html("salah");
                 if(health_user == 0){
-                    //game over  
+                    
+                    document.getElementById('shop1').style.visibility = 'hidden';
+                    document.getElementById('shop2').style.visibility = 'hidden';
+                    document.getElementById('skip').style.visibility = 'hidden';
+                    document.getElementById('pause').style.visibility = 'hidden';
+                    document.getElementById('resume').style.visibility = 'hidden';
+
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    $("#question").html("Game Over You Died");
+
+                    PostLeaderboard();
+
                     $("#wizard").attr('src',"/image/wizard_death.gif");
                     setTimeout(function(){
                         $("#wizard").attr('src',"/image/wizard_death_png.gif");
                     }, 700);   
+
+                    setTimeout(function(){
+                        location.replace("http://127.0.0.1:8000/leaderboard");
+                    }, 5000);
+                }else{
+                    button_pressed = 1;
+                    PertanyaanListPertama(); 
                 }
-                button_pressed = 1;
-                PertanyaanListPertama(); 
             }
         })
 
@@ -752,14 +781,33 @@ function klikjawaban(){
                 $("#health_user").html(health_user);
                 $("#jawaban4").html("salah");
                 if(health_user == 0){
-                    //game over
+                    
+                    document.getElementById('shop1').style.visibility = 'hidden';
+                    document.getElementById('shop2').style.visibility = 'hidden';
+                    document.getElementById('skip').style.visibility = 'hidden';
+                    document.getElementById('pause').style.visibility = 'hidden';
+                    document.getElementById('resume').style.visibility = 'hidden';
+
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    $("#question").html("Game Over You Died");
+
+                    PostLeaderboard();
+
                     $("#wizard").attr('src',"/image/wizard_death.gif");
                     setTimeout(function(){
                         $("#wizard").attr('src',"/image/wizard_death_png.gif");
                     }, 700);
+
+                    setTimeout(function(){
+                        location.replace("http://127.0.0.1:8000/leaderboard");
+                    }, 5000);
+                }else{
+                    button_pressed = 1;
+                    PertanyaanListPertama(); 
                 }
-                button_pressed = 1;
-                PertanyaanListPertama(); 
             }
         })
     
@@ -800,14 +848,33 @@ function klikjawaban(){
                 $("#health_user").html(health_user);
                 $("#jawaban1").html("salah");
                 if(health_user == 0){
-                    //game over
+                    
+                    document.getElementById('shop1').style.visibility = 'hidden';
+                    document.getElementById('shop2').style.visibility = 'hidden';
+                    document.getElementById('skip').style.visibility = 'hidden';
+                    document.getElementById('pause').style.visibility = 'hidden';
+                    document.getElementById('resume').style.visibility = 'hidden';
+
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    $("#question").html("Game Over You Died");
+
+                    PostLeaderboard();
+
                     $("#wizard").attr('src',"/image/wizard_death.gif");
                     setTimeout(function(){
                         $("#wizard").attr('src',"/image/wizard_death_png.gif");
                     }, 700);
+
+                    setTimeout(function(){
+                        location.replace("http://127.0.0.1:8000/leaderboard");
+                    }, 5000);
+                }else{
+                    button_pressed = 1;
+                    PertanyaanListPertama(); 
                 }
-                button_pressed = 1;
-                PertanyaanListPertama(); 
             }
         })
 
@@ -845,14 +912,33 @@ function klikjawaban(){
                 $("#health_user").html(health_user);
                 $("#jawaban2").html("salah");
                 if(health_user == 0){
-                    //game over
+                    
+                    document.getElementById('shop1').style.visibility = 'hidden';
+                    document.getElementById('shop2').style.visibility = 'hidden';
+                    document.getElementById('skip').style.visibility = 'hidden';
+                    document.getElementById('pause').style.visibility = 'hidden';
+                    document.getElementById('resume').style.visibility = 'hidden';
+
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    $("#question").html("Game Over You Died");
+
+                    PostLeaderboard();
+
                     $("#wizard").attr('src',"/image/wizard_death.gif");
                     setTimeout(function(){
                         $("#wizard").attr('src',"/image/wizard_death_png.gif");
                     }, 700);
+
+                    setTimeout(function(){
+                        location.replace("http://127.0.0.1:8000/leaderboard");
+                    }, 5000);
+                }else{
+                    button_pressed = 1;
+                    PertanyaanListPertama(); 
                 }
-                button_pressed = 1;
-                PertanyaanListPertama(); 
             }
         })
 
@@ -878,37 +964,8 @@ function klikjawaban(){
                     document.getElementById('jawaban4').style.visibility = 'hidden';
                     document.getElementById('question').style.visibility = 'hidden';
 
-                    $("#shop1").click(function(){
-                        if(money>=100){
-                            current_damage += 15;
-                            money -= 100
-                            $("#money").html(money);
-                            document.getElementById('jawaban1').style.visibility = 'visible';
-                            document.getElementById('jawaban2').style.visibility = 'visible';
-                            document.getElementById('jawaban3').style.visibility = 'visible';
-                            document.getElementById('jawaban4').style.visibility = 'visible';
-                            document.getElementById('question').style.visibility = 'visible';
-                        }
-                    })
+                    shop();
 
-                    $("#shop2").click(function(){
-                        if(money>=200){
-                            if(health_user == 3){
-
-                            }else{
-                                money -= 200
-                                health_user ++;
-                                $("#health_user").html(health_user);
-                                $("#money").html(money);
-                                document.getElementById('jawaban1').style.visibility = 'visible';
-                                document.getElementById('jawaban2').style.visibility = 'visible';
-                                document.getElementById('jawaban3').style.visibility = 'visible';
-                                document.getElementById('jawaban4').style.visibility = 'visible';
-                                document.getElementById('question').style.visibility = 'visible';
-                            }
-                            
-                        }
-                    })
                     //game over
                     if(randomMonster == 1){
                         $("#monster").attr('src',"/image/monster_death.gif");
@@ -1036,14 +1093,33 @@ function klikjawaban(){
                 $("#health_user").html(health_user);
                 $("#jawaban4").html("salah");
                 if(health_user == 0){
-                    //game over
+                    
+                    document.getElementById('shop1').style.visibility = 'hidden';
+                    document.getElementById('shop2').style.visibility = 'hidden';
+                    document.getElementById('skip').style.visibility = 'hidden';
+                    document.getElementById('pause').style.visibility = 'hidden';
+                    document.getElementById('resume').style.visibility = 'hidden';
+
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    $("#question").html("Game Over You Died");
+
+                    PostLeaderboard();
+
                     $("#wizard").attr('src',"/image/wizard_death.gif");
                     setTimeout(function(){
                         $("#wizard").attr('src',"/image/wizard_death_png.gif");
                     }, 700);
+
+                    setTimeout(function(){
+                        location.replace("http://127.0.0.1:8000/leaderboard");
+                    }, 5000);
+                }else{
+                    button_pressed = 1;
+                    PertanyaanListPertama(); 
                 }
-                button_pressed = 1;
-                PertanyaanListPertama(); 
             }
         })
 
@@ -1084,14 +1160,32 @@ function klikjawaban(){
                 $("#health_user").html(health_user);
                 $("#jawaban1").html("salah");
                 if(health_user == 0){
-                    //game over
+                    
+                    document.getElementById('shop1').style.visibility = 'hidden';
+                    document.getElementById('shop2').style.visibility = 'hidden';
+                    document.getElementById('skip').style.visibility = 'hidden';
+                    document.getElementById('pause').style.visibility = 'hidden';
+                    document.getElementById('resume').style.visibility = 'hidden';
+
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    $("#question").html("Game Over You Died");
+
+                    PostLeaderboard();
+
                     $("#wizard").attr('src',"/image/wizard_death.gif");
                     setTimeout(function(){
                         $("#wizard").attr('src',"/image/wizard_death_png.gif");
                     }, 700);
+                    setTimeout(function(){
+                        location.replace("http://127.0.0.1:8000/leaderboard");
+                    }, 5000);
+                }else{
+                    button_pressed = 1;
+                    PertanyaanListPertama(); 
                 }
-                button_pressed = 1;
-                PertanyaanListPertama(); 
             }
         })
 
@@ -1129,14 +1223,33 @@ function klikjawaban(){
                 $("#health_user").html(health_user);
                 $("#jawaban2").html("salah");
                 if(health_user == 0){
-                    //game over
+                    
+                    document.getElementById('shop1').style.visibility = 'hidden';
+                    document.getElementById('shop2').style.visibility = 'hidden';
+                    document.getElementById('skip').style.visibility = 'hidden';
+                    document.getElementById('pause').style.visibility = 'hidden';
+                    document.getElementById('resume').style.visibility = 'hidden';
+
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    $("#question").html("Game Over You Died");
+
+                    PostLeaderboard();
+
                     $("#wizard").attr('src',"/image/wizard_death.gif");
                     setTimeout(function(){
                         $("#wizard").attr('src',"/image/wizard_death_png.gif");
                     }, 700);
+
+                    setTimeout(function(){
+                        location.replace("http://127.0.0.1:8000/leaderboard");
+                    }, 5000);
+                }else{
+                    button_pressed = 1;
+                    PertanyaanListPertama(); 
                 }
-                button_pressed = 1;
-                PertanyaanListPertama(); 
             }
         })
 
@@ -1174,14 +1287,32 @@ function klikjawaban(){
                 $("#health_user").html(health_user);
                 $("#jawaban3").html("salah");
                 if(health_user == 0){
-                    //game over
+                    
+                    document.getElementById('shop1').style.visibility = 'hidden';
+                    document.getElementById('shop2').style.visibility = 'hidden';
+                    document.getElementById('skip').style.visibility = 'hidden';
+                    document.getElementById('pause').style.visibility = 'hidden';
+                    document.getElementById('resume').style.visibility = 'hidden';
+
+                    document.getElementById('jawaban1').style.visibility = 'hidden';
+                    document.getElementById('jawaban2').style.visibility = 'hidden';
+                    document.getElementById('jawaban3').style.visibility = 'hidden';
+                    document.getElementById('jawaban4').style.visibility = 'hidden';
+                    $("#question").html("Game Over You Died");
+
+                    PostLeaderboard();
+
                     $("#wizard").attr('src',"/image/wizard_death.gif");
                     setTimeout(function(){
                         $("#wizard").attr('src',"/image/wizard_death_png.gif");
                     }, 700);
+                    setTimeout(function(){
+                        location.replace("http://127.0.0.1:8000/leaderboard");
+                    }, 5000);
+                }else{
+                    button_pressed = 1;
+                    PertanyaanListPertama(); 
                 }
-                button_pressed = 1;
-                PertanyaanListPertama(); 
             }
         })
 
@@ -1207,37 +1338,8 @@ function klikjawaban(){
                     document.getElementById('jawaban4').style.visibility = 'hidden';
                     document.getElementById('question').style.visibility = 'hidden';
 
-                    $("#shop1").click(function(){
-                        if(money>=100){
-                            current_damage += 15;
-                            money -= 100
-                            $("#money").html(money);
-                            document.getElementById('jawaban1').style.visibility = 'visible';
-                            document.getElementById('jawaban2').style.visibility = 'visible';
-                            document.getElementById('jawaban3').style.visibility = 'visible';
-                            document.getElementById('jawaban4').style.visibility = 'visible';
-                            document.getElementById('question').style.visibility = 'visible';
-                        }
-                    })
+                    shop();
 
-                    $("#shop2").click(function(){
-                        if(money>=200){
-                            if(health_user == 3){
-
-                            }else{
-                                money -= 200
-                                health_user ++;
-                                $("#health_user").html(health_user);
-                                $("#money").html(money);
-                                document.getElementById('jawaban1').style.visibility = 'visible';
-                                document.getElementById('jawaban2').style.visibility = 'visible';
-                                document.getElementById('jawaban3').style.visibility = 'visible';
-                                document.getElementById('jawaban4').style.visibility = 'visible';
-                                document.getElementById('question').style.visibility = 'visible';
-                            }
-                            
-                        }
-                    })
                     //game over
                     if(randomMonster == 1){
                         $("#monster").attr('src',"/image/monster_death.gif");
@@ -1331,4 +1433,72 @@ function klikjawaban(){
             }
         })
     }     
+}
+
+//Function Shop
+function shop(){
+    $("#shop1").click(function(){
+        if(money>=100){
+            current_damage += 15;
+            money -= 100
+            $("#money").html(money);
+            document.getElementById('jawaban1').style.visibility = 'visible';
+            document.getElementById('jawaban2').style.visibility = 'visible';
+            document.getElementById('jawaban3').style.visibility = 'visible';
+            document.getElementById('jawaban4').style.visibility = 'visible';
+            document.getElementById('question').style.visibility = 'visible';
+        }else{
+            alert("Your Money is not Enough");
+        }
+    })
+
+    $("#shop2").click(function(){
+        if(money>=200){
+            if(health_user == 3){
+
+            }else{
+                money -= 200
+                health_user ++;
+                $("#health_user").html(health_user);
+                $("#money").html(money);
+                document.getElementById('jawaban1').style.visibility = 'visible';
+                document.getElementById('jawaban2').style.visibility = 'visible';
+                document.getElementById('jawaban3').style.visibility = 'visible';
+                document.getElementById('jawaban4').style.visibility = 'visible';
+                document.getElementById('question').style.visibility = 'visible';
+            }
+            
+        }else{
+            alert("Your Money is not Enough");
+        }
+    })
+
+    $("#skip").click(function(){
+        document.getElementById('jawaban1').style.visibility = 'visible';
+        document.getElementById('jawaban2').style.visibility = 'visible';
+        document.getElementById('jawaban3').style.visibility = 'visible';
+        document.getElementById('jawaban4').style.visibility = 'visible';
+        document.getElementById('question').style.visibility = 'visible';
+    })
+}
+
+// Post Data to Leaderboard
+function PostLeaderboard(){
+    $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        url: "http://127.0.0.1:8000/postLeaderboard",
+        type: 'POST',
+        dataType: 'JSON',
+        data: { 
+            name: player_name,
+            total_damage: total_damage			
+        },
+        success: function(data){
+            alert(data.success);
+        }
+    });
 }
