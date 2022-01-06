@@ -2,18 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\gamedata;
+use App\Models\terbunuh;
 use Illuminate\Http\Request;
 
-class GamedataController extends Controller
+class TerbunuhController extends Controller
 {
-    
-    public function getGameData($id)
-    {
-       $gamedata = gamedata::where('student_id_gamedata',$id)->first();
-       return response()->json($gamedata, 200);
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -42,14 +35,12 @@ class GamedataController extends Controller
      */
     public function store(Request $request)
     {
-        gamedata::create([
-            'student_gamedata_id' => $request->student_gamedata_id,
-            'student_id_gamedata' => $request->student_id_gamedata,
-            'total_damage' => $request->total_damage,
-            'health_left' => $request->health_left,
-            'money' => $request->money,
-            'time_left' => $request->time_left,
-            'current_damage' => $request->current_damage,
+        terbunuh::create([
+            'terbunuh_id' => $request->terbunuh_id,
+            'monster_id_terbunuh' => $request->monster_id_terbunuh,
+            'student_gamedata_id_terbunuh' => $request->student_gamedata_id_terbunuh,
+            'monster_base_health' => $request->monster_base_health,
+            'monster_health_left' => $request->monster_health_left
         ]);
     }
 
@@ -61,7 +52,8 @@ class GamedataController extends Controller
      */
     public function show($id)
     {
-        //
+        $terbunuh = terbunuh::where('student_gamedata_id_terbunuh', $id)->first();
+        return response()->json($terbunuh, 200);
     }
 
     /**
@@ -84,14 +76,12 @@ class GamedataController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $gamedata = gamedata::findOrFail($id);
-        $gamedata->update([
-            'student_id_gamedata' => $request->student_id_gamedata,
-            'total_damage' => $request->total_damage,
-            'health_left' => $request->health_left,
-            'money' => $request->money,
-            'time_left' => $request->time_left,
-            'current_damage' => $request->current_damage,
+        $terbunuh = terbunuh::where('terbunuh_id', $id);
+        $terbunuh->update([
+            'monster_id_terbunuh' => $request->monster_id_terbunuh,
+            'student_gamedata_id_terbunuh' => $request->student_gamedata_id_terbunuh,
+            'monster_base_health' => $request->monster_base_health,
+            'monster_health_left' => $request->monster_health_left
         ]);
     }
 

@@ -48,5 +48,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/postLeaderboard', 'App\Http\Controllers\LeaderboardController@store');
 
-    Route::post('/csrf', 'App\Http\Controllers\LeaderboardController@index');
+    Route::post('/postGameData', 'App\Http\Controllers\GamedataController@store');
+
+    Route::post('/updateGameData/{id}', 'App\Http\Controllers\GamedataController@update');
+
+    Route::get('/getTerbunuh/{id}', 'App\Http\Controllers\TerbunuhController@show');
+
+    Route::post('/postTerbunuh', 'App\Http\Controllers\TerbunuhController@store');
+
+    Route::post('/updateTerbunuh/{id}', 'App\Http\Controllers\TerbunuhController@update');
 });

@@ -6,6 +6,7 @@ let jawaban_salah3;
 
 let player_name;
 
+var gamedata_id;
 var total_damage = 0;
 var benar = 0;
 var current_damage = 0;
@@ -16,15 +17,13 @@ var current_health_monster = health_monster;
 var randomPertanyaan;
 var randomMonster = 1;
 var timestart = 1;
+var time_to_database;
 
 //Saat Ngeload
 $(document).ready(function() {
     //Hidden Button Resume And Show Pause
     document.getElementById('pause').style.visibility = 'visible';
     document.getElementById('resume').style.visibility = 'hidden';
-
-    //Monster Health Bar 100%
-    progressBarFull.style.width = '100%';
 
     //Get User Data
     GetUserData();
@@ -40,8 +39,10 @@ function GetUserData(){
         dataType: 'json',
         url: "http://127.0.0.1:8000/profiledata",
         success: function (data) {
+            gamedata_id = data.id;
             GetGameData(data.id);
             player_name = data.name;
+            GetTerbunuh(data.id);
         }
     });
 }
@@ -53,18 +54,28 @@ function GetGameData($id){
         dataType: 'json',
         url: "http://127.0.0.1:8000/getGameData/"+$id,
         success: function (data) {
-            total_damage = data.total_damage;
-            current_damage = data.current_damage;
-            health_user = data.health_left;
-            money = data.money;
 
-            //Start Timer
-            var seconds = data.time_left,
-            display = document.querySelector('#time');
-            startTimer(seconds, display);
+            //If GameData == null
+            if (data.time_left == null ){  
+                PostGameData(gamedata_id);
+                GetGameData(gamedata_id);
+                CreateTerbunuh(gamedata_id);
+                GetTerbunuh(gamedata_id);
 
-            $("#health_user").html(health_user);
-            $("#total_damage").html(total_damage);
+            }else{
+                total_damage = data.total_damage;
+                current_damage = data.current_damage;
+                health_user = data.health_left;
+                money = data.money;
+    
+                //Start Timer
+                var seconds = data.time_left,
+                display = document.querySelector('#time');
+                startTimer(seconds, display);
+    
+                $("#health_user").html(health_user);
+                $("#total_damage").html(total_damage);
+            }
         }
     });
 }
@@ -78,6 +89,12 @@ function startTimer(duration, display) {
     $("#pause").click(function(){
         clearInterval(runcountdown);
         duration = ((minutes*60) + seconds)-1;
+
+        //Update Game Data
+        UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
+
+        //Update Current Monster Data
+        UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
 
         //Hide Button Pause, Display Resume
         document.getElementById('pause').style.visibility = 'hidden';
@@ -122,9 +139,27 @@ function startTimer(duration, display) {
         seconds = seconds < 10 ? "0" + seconds : seconds;
 
         display.textContent = minutes + ":" + seconds;
+        time_to_database = ((minutes*60) + seconds)-1;
 
         if (--timer < 0) {
-            timer = duration;
+            clearInterval(runcountdown);
+            document.getElementById('shop1').style.visibility = 'hidden';
+            document.getElementById('shop2').style.visibility = 'hidden';
+            document.getElementById('skip').style.visibility = 'hidden';
+            document.getElementById('pause').style.visibility = 'hidden';
+            document.getElementById('resume').style.visibility = 'hidden';
+
+            document.getElementById('jawaban1').style.visibility = 'hidden';
+            document.getElementById('jawaban2').style.visibility = 'hidden';
+            document.getElementById('jawaban3').style.visibility = 'hidden';
+            document.getElementById('jawaban4').style.visibility = 'hidden';
+            $("#question").html("Game Over Times Up");
+
+            PostLeaderboard();
+
+            setTimeout(function(){
+                location.replace("http://127.0.0.1:8000/leaderboard");
+            }, 5000);
         }
     }
 }
@@ -204,104 +239,13 @@ function klikjawaban(){
                 $("#total_damage").html(total_damage);
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
-                if(current_health_monster <= 0){
-                    //Shop
-                    //Jawaban dan Pertanyaan di Hidden
-                    document.getElementById('jawaban1').style.visibility = 'hidden';
-                    document.getElementById('jawaban2').style.visibility = 'hidden';
-                    document.getElementById('jawaban3').style.visibility = 'hidden';
-                    document.getElementById('jawaban4').style.visibility = 'hidden';
-                    document.getElementById('question').style.visibility = 'hidden';
+                
+                //Update Game Data
+                UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
 
-                   shop();
-                   
-                    if(randomMonster == 1){
-                        $("#monster").attr('src',"/image/monster_death.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 2200);
-                    }else if(randomMonster == 2){
-                        $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_death.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 900);
-                    }else if(randomMonster == 3){
-                        $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_death_v2.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 900);
-                    }else if(randomMonster == 4){
-                        $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_death_v2.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 1200);
-                    }else if(randomMonster == 5){
-                        $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_death_v2.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 1100);
-                    }
-                    money += 100;
-                    $("#money").html(money);
-                    health_monster = health_monster * 2;
-                    current_health_monster = health_monster;
-                    progressBarFull.style.width = '100%';
-                }
+                //Health Monster Habis
+                health_monster_habis()
+
                 button_pressed = 1;
                 PertanyaanListPertama(); 
             }
@@ -366,6 +310,13 @@ function klikjawaban(){
                     }, 5000);
                 }else{
                     button_pressed = 1;
+
+                    //Update Game Data
+                    UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
+
+                    //Update Current Monster Data
+                    UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                     PertanyaanListPertama(); 
                 }
             }
@@ -430,6 +381,13 @@ function klikjawaban(){
                     }, 5000);
                 }else{
                     button_pressed = 1;
+
+                    //Update Game Data
+                    UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
+
+                    //Update Current Monster Data
+                    UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                     PertanyaanListPertama(); 
                 }
             }
@@ -494,6 +452,13 @@ function klikjawaban(){
                     }, 5000);
                 }else{
                     button_pressed = 1;
+
+                    //Update Game Data
+                    UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
+
+                    //Update Current Monster Data
+                    UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                     PertanyaanListPertama(); 
                 }
             }
@@ -561,6 +526,13 @@ function klikjawaban(){
                     }, 5000);
                 }else{
                     button_pressed = 1;
+
+                    //Update Game Data
+                    UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
+
+                    //Update Current Monster Data
+                    UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                     PertanyaanListPertama(); 
                 }
             }
@@ -578,106 +550,13 @@ function klikjawaban(){
                 $("#total_damage").html(total_damage);
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
-                if(current_health_monster <= 0){
+                
+                //Update Game Data
+                UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
 
-                    //Shop
-                    //Jawaban dan Pertanyaan di Hidden
-                    document.getElementById('jawaban1').style.visibility = 'hidden';
-                    document.getElementById('jawaban2').style.visibility = 'hidden';
-                    document.getElementById('jawaban3').style.visibility = 'hidden';
-                    document.getElementById('jawaban4').style.visibility = 'hidden';
-                    document.getElementById('question').style.visibility = 'hidden';
+                //Health Monster Habis
+                health_monster_habis()
 
-                    shop();
-
-                    //game over
-                    if(randomMonster == 1){
-                        $("#monster").attr('src',"/image/monster_death.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 2200);
-                    }else if(randomMonster == 2){
-                        $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_death.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 900);
-                    }else if(randomMonster == 3){
-                        $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_death_v2.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 900);
-                    }else if(randomMonster == 4){
-                        $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_death_v2.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 1200);
-                    }else if(randomMonster == 5){
-                        $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_death_v2.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 1100);
-                    }
-                    money += 100;
-                    $("#money").html(money);
-                    health_monster = health_monster * 2;
-                    current_health_monster = health_monster;
-                    progressBarFull.style.width = '100%';
-                }
                 button_pressed = 1;
                 PertanyaanListPertama(); 
             }
@@ -742,6 +621,13 @@ function klikjawaban(){
                     }, 5000);
                 }else{
                     button_pressed = 1;
+
+                    //Update Game Data
+                    UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
+
+                    //Update Current Monster Data
+                    UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                     PertanyaanListPertama(); 
                 }
             }
@@ -806,6 +692,13 @@ function klikjawaban(){
                     }, 5000);
                 }else{
                     button_pressed = 1;
+
+                    //Update Game Data
+                    UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
+
+                    //Update Current Monster Data
+                    UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                     PertanyaanListPertama(); 
                 }
             }
@@ -873,6 +766,13 @@ function klikjawaban(){
                     }, 5000);
                 }else{
                     button_pressed = 1;
+
+                    //Update Game Data
+                    UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
+
+                    //Update Current Monster Data
+                    UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                     PertanyaanListPertama(); 
                 }
             }
@@ -937,6 +837,13 @@ function klikjawaban(){
                     }, 5000);
                 }else{
                     button_pressed = 1;
+
+                    //Update Game Data
+                    UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
+
+                    //Update Current Monster Data
+                    UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                     PertanyaanListPertama(); 
                 }
             }
@@ -954,106 +861,13 @@ function klikjawaban(){
                 $("#total_damage").html(total_damage);
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
-                if(current_health_monster <= 0){
 
-                    //Shop
-                    //Jawaban dan Pertanyaan di Hidden
-                    document.getElementById('jawaban1').style.visibility = 'hidden';
-                    document.getElementById('jawaban2').style.visibility = 'hidden';
-                    document.getElementById('jawaban3').style.visibility = 'hidden';
-                    document.getElementById('jawaban4').style.visibility = 'hidden';
-                    document.getElementById('question').style.visibility = 'hidden';
+                //Update Game Data
+                UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
 
-                    shop();
+                //Health Monster Habis
+                health_monster_habis()
 
-                    //game over
-                    if(randomMonster == 1){
-                        $("#monster").attr('src',"/image/monster_death.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 2200);
-                    }else if(randomMonster == 2){
-                        $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_death.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 900);
-                    }else if(randomMonster == 3){
-                        $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_death_v2.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 900);
-                    }else if(randomMonster == 4){
-                        $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_death_v2.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 1200);
-                    }else if(randomMonster == 5){
-                        $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_death_v2.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 1100);
-                    }
-                    money += 100;
-                    $("#money").html(money);
-                    health_monster = health_monster * 2;
-                    current_health_monster = health_monster;
-                    progressBarFull.style.width = '100%';
-                }
                 button_pressed = 1;
                 PertanyaanListPertama(); 
             }
@@ -1118,6 +932,13 @@ function klikjawaban(){
                     }, 5000);
                 }else{
                     button_pressed = 1;
+                    
+                    //Update Game Data
+                    UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
+
+                    //Update Current Monster Data
+                    UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                     PertanyaanListPertama(); 
                 }
             }
@@ -1184,6 +1005,13 @@ function klikjawaban(){
                     }, 5000);
                 }else{
                     button_pressed = 1;
+
+                    //Update Game Data
+                    UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
+
+                    //Update Current Monster Data
+                    UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                     PertanyaanListPertama(); 
                 }
             }
@@ -1248,6 +1076,13 @@ function klikjawaban(){
                     }, 5000);
                 }else{
                     button_pressed = 1;
+
+                    //Update Game Data
+                    UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
+                    
+                    //Update Current Monster Data
+                    UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                     PertanyaanListPertama(); 
                 }
             }
@@ -1311,6 +1146,12 @@ function klikjawaban(){
                     }, 5000);
                 }else{
                     button_pressed = 1;
+                    //Update Game Data
+                    UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
+
+                    //Update Current Monster Data
+                    UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                     PertanyaanListPertama(); 
                 }
             }
@@ -1328,106 +1169,13 @@ function klikjawaban(){
                 $("#total_damage").html(total_damage);
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
-                if(current_health_monster <= 0){
+                
+                //Update Game Data
+                UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
 
-                    //Shop
-                    //Jawaban dan Pertanyaan di Hidden
-                    document.getElementById('jawaban1').style.visibility = 'hidden';
-                    document.getElementById('jawaban2').style.visibility = 'hidden';
-                    document.getElementById('jawaban3').style.visibility = 'hidden';
-                    document.getElementById('jawaban4').style.visibility = 'hidden';
-                    document.getElementById('question').style.visibility = 'hidden';
+                //Health Monster Habis
+                health_monster_habis()
 
-                    shop();
-
-                    //game over
-                    if(randomMonster == 1){
-                        $("#monster").attr('src',"/image/monster_death.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 2200);
-                    }else if(randomMonster == 2){
-                        $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_death.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 900);
-                    }else if(randomMonster == 3){
-                        $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_death_v2.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 900);
-                    }else if(randomMonster == 4){
-                        $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_death_v2.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 1200);
-                    }else if(randomMonster == 5){
-                        $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_death_v2.gif");
-                        setTimeout(function(){
-                            randomMonster = Math.floor(Math.random() * 5) + 1;
-                            if(randomMonster == 1){
-                                $("#monster").attr('src',"/image/monster_idle.gif");
-                            }else if(randomMonster == 2){
-                                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
-                            }else if(randomMonster == 3){
-                                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
-                            }else if(randomMonster == 4){
-                                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
-                            }else if(randomMonster == 5){
-                                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
-                            }
-                        }, 1100);
-                    }
-                    money += 100;
-                    $("#money").html(money);
-                    health_monster = health_monster * 2;
-                    current_health_monster = health_monster;
-                    progressBarFull.style.width = '100%';
-                }
                 button_pressed = 1;
                 PertanyaanListPertama();  
             }
@@ -1447,6 +1195,9 @@ function shop(){
             document.getElementById('jawaban3').style.visibility = 'visible';
             document.getElementById('jawaban4').style.visibility = 'visible';
             document.getElementById('question').style.visibility = 'visible';
+
+            //Update Game Data
+            UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
         }else{
             alert("Your Money is not Enough");
         }
@@ -1466,6 +1217,9 @@ function shop(){
                 document.getElementById('jawaban3').style.visibility = 'visible';
                 document.getElementById('jawaban4').style.visibility = 'visible';
                 document.getElementById('question').style.visibility = 'visible';
+
+                //Update Game Data
+                UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
             }
             
         }else{
@@ -1479,11 +1233,20 @@ function shop(){
         document.getElementById('jawaban3').style.visibility = 'visible';
         document.getElementById('jawaban4').style.visibility = 'visible';
         document.getElementById('question').style.visibility = 'visible';
+
+        //Update Game Data
+        UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
     })
 }
 
 // Post Data to Leaderboard
 function PostLeaderboard(){
+    //Update Current Monster Data
+    UpdateTerbunuh(gamedata_id, 1, 100, 100);
+    
+    //Update Game Data
+    UpdateGameData(gamedata_id, 0, 3, 0, 600, 20);
+
     $.ajaxSetup({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1502,3 +1265,239 @@ function PostLeaderboard(){
         }
     });
 }
+
+//Create Game Data
+function PostGameData(id){
+    $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        url: "http://127.0.0.1:8000/postGameData",
+        type: 'POST',
+        dataType: 'JSON',
+        data: { 
+            student_gamedata_id: id,
+            student_id_gamedata: id,
+            total_damage : 0,
+            health_left : 3,
+            money : 0,
+            time_left : 600,
+            current_damage : 20	
+        },
+        success: function(data){
+            alert(data.success);
+        }
+    });
+}
+
+//Update Game Data
+function UpdateGameData(id, total_damage, health_left, money, time_left, current_damage){
+    $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        url: "http://127.0.0.1:8000/updateGameData/" + id,
+        type: 'POST',
+        dataType: 'JSON',
+        data: { 
+            student_gamedata_id: id,
+            student_id_gamedata: id,
+            total_damage : total_damage,
+            health_left : health_left,
+            money : money,
+            time_left : time_left,
+            current_damage : current_damage	
+        },
+        success: function(data){
+            alert(data.success);
+        }
+    });
+}
+
+//Get Monster Terbunuh
+function GetTerbunuh(id){
+    $.ajax({
+        type: "GET",
+        dataType: 'json',
+        url: "http://127.0.0.1:8000/getTerbunuh/"+id,
+        success: function (data) {
+            randomMonster = data.monster_id_terbunuh;
+            health_monster = data.monster_base_health;
+            current_health_monster = data.monster_health_left;
+
+            progressBarFull.style.width = (((current_health_monster)*100)/health_monster) + '%';
+            if(randomMonster == 1){
+                $("#monster").attr('src',"/image/monster_idle.gif");
+            }else if(randomMonster == 2){
+                $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
+            }else if(randomMonster == 3){
+                $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
+            }else if(randomMonster == 4){
+                $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
+            }else if(randomMonster == 5){
+                $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
+            }
+        }
+    });
+}
+
+//Create Terbunuh
+function CreateTerbunuh(id){
+    $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        url: "http://127.0.0.1:8000/postTerbunuh",
+        type: 'POST',
+        dataType: 'JSON',
+        data: { 
+            terbunuh_id: id,
+            monster_id_terbunuh: 1,
+            student_gamedata_id_terbunuh : id,
+            monster_base_health : 100,
+            monster_health_left : 100
+        },
+        success: function(data){
+            alert(data.success);
+        }
+    });
+}
+
+//Function Update Terbunuh
+function UpdateTerbunuh(id, monster_id, current_health_monster, health_monster){
+    $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    $.ajax({
+        url: "http://127.0.0.1:8000/updateTerbunuh/" + id,
+        type: 'POST',
+        dataType: 'JSON',
+        data: { 
+            monster_id_terbunuh: monster_id,
+            student_gamedata_id_terbunuh : id,
+            monster_base_health : health_monster,
+            monster_health_left : current_health_monster
+        },
+        success: function(data){
+            alert(data.success);
+        }
+    });
+}
+
+function health_monster_habis(){
+    if(current_health_monster <= 0){
+
+        //Shop
+        //Jawaban dan Pertanyaan di Hidden
+        document.getElementById('jawaban1').style.visibility = 'hidden';
+        document.getElementById('jawaban2').style.visibility = 'hidden';
+        document.getElementById('jawaban3').style.visibility = 'hidden';
+        document.getElementById('jawaban4').style.visibility = 'hidden';
+        document.getElementById('question').style.visibility = 'hidden';
+
+        shop();
+
+        //game over
+        if(randomMonster == 1){
+            $("#monster").attr('src',"/image/monster_death.gif");
+            setTimeout(function(){
+                randomMonster = Math.floor(Math.random() * 5) + 1;
+                if(randomMonster == 1){
+                    $("#monster").attr('src',"/image/monster_idle.gif");
+                }else if(randomMonster == 2){
+                    $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
+                }else if(randomMonster == 3){
+                    $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
+                }else if(randomMonster == 4){
+                    $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
+                }else if(randomMonster == 5){
+                    $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
+                }
+            }, 2200);
+        }else if(randomMonster == 2){
+            $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_death.gif");
+            setTimeout(function(){
+                randomMonster = Math.floor(Math.random() * 5) + 1;
+                if(randomMonster == 1){
+                    $("#monster").attr('src',"/image/monster_idle.gif");
+                }else if(randomMonster == 2){
+                    $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
+                }else if(randomMonster == 3){
+                    $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
+                }else if(randomMonster == 4){
+                    $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
+                }else if(randomMonster == 5){
+                    $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
+                }
+            }, 900);
+        }else if(randomMonster == 3){
+            $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_death_v2.gif");
+            setTimeout(function(){
+                randomMonster = Math.floor(Math.random() * 5) + 1;
+                if(randomMonster == 1){
+                    $("#monster").attr('src',"/image/monster_idle.gif");
+                }else if(randomMonster == 2){
+                    $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
+                }else if(randomMonster == 3){
+                    $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
+                }else if(randomMonster == 4){
+                    $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
+                }else if(randomMonster == 5){
+                    $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
+                }
+            }, 900);
+        }else if(randomMonster == 4){
+            $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_death_v2.gif");
+            setTimeout(function(){
+                randomMonster = Math.floor(Math.random() * 5) + 1;
+                if(randomMonster == 1){
+                    $("#monster").attr('src',"/image/monster_idle.gif");
+                }else if(randomMonster == 2){
+                    $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
+                }else if(randomMonster == 3){
+                    $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
+                }else if(randomMonster == 4){
+                    $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
+                }else if(randomMonster == 5){
+                    $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
+                }
+            }, 1200);
+        }else if(randomMonster == 5){
+            $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_death_v2.gif");
+            setTimeout(function(){
+                randomMonster = Math.floor(Math.random() * 5) + 1;
+                if(randomMonster == 1){
+                    $("#monster").attr('src',"/image/monster_idle.gif");
+                }else if(randomMonster == 2){
+                    $("#monster").attr('src',"/image/Eyeball_monster/Eyeball_monster_idle.gif");
+                }else if(randomMonster == 3){
+                    $("#monster").attr('src',"/image/Fire_worm_v2/Fire_worm_idle_v2.gif");
+                }else if(randomMonster == 4){
+                    $("#monster").attr('src',"/image/Scifi_monster_v2/Scifi_monster_idle_v2.gif");
+                }else if(randomMonster == 5){
+                    $("#monster").attr('src',"/image/Trash_monster_v2/Trash_monster_idle_v2.gif");
+                }
+            }, 1100);
+        }
+
+        money += 100;
+        $("#money").html(money);
+        health_monster = health_monster * 2;
+        current_health_monster = health_monster;
+        progressBarFull.style.width = '100%';
+
+        //Update Current Monster Data
+        UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
+        //Update Game Data
+        UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
+    }
+}   
