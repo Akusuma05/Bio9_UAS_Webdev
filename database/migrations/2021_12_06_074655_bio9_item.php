@@ -16,8 +16,8 @@ class Bio9Item extends Migration
         Schema::create('bio9_item', function (Blueprint $table) {
             $table->integer('item_id')->primary();
             $table->String('item_name');
-            $table->integer('base_harga');
-            $table->integer('penambahan_damage');
+            $table->integer('price');
+            $table->integer('attribute');
         });
     }
 

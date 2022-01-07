@@ -13,8 +13,8 @@ class RelationMonsterTerbunuh extends Migration
      */
     public function up()
     {
-        Schema::table('bio9_monster_terbunuh', function (Blueprint $table) {
-            $table->foreign('monster_id_terbunuh')
+        Schema::table('bio9_current_monster', function (Blueprint $table) {
+            $table->foreign('monster_id')
             ->references('monster_id')->on('bio9_monster')
             ->onDelete('cascade')
             ->onUpdate('cascade');

@@ -13,10 +13,10 @@ class Bio9MonsterTerbunuh extends Migration
      */
     public function up()
     {
-        Schema::create('bio9_monster_terbunuh', function (Blueprint $table) {
-            $table->bigIncrements('terbunuh_id');
-            $table->integer('monster_id_terbunuh');
-            $table->integer('student_gamedata_id_terbunuh');
+        Schema::create('bio9_current_monster', function (Blueprint $table) {
+            $table->bigIncrements('current_monster_id');
+            $table->integer('monster_id');
+            $table->integer('gamedata_id');
             $table->integer('monster_base_health');
             $table->integer('monster_health_left');
         });

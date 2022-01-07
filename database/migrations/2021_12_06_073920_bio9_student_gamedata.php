@@ -14,8 +14,8 @@ class Bio9StudentGamedata extends Migration
     public function up()
     {
         Schema::create('bio9_student_gamedata', function (Blueprint $table) {
-            $table->integer('student_gamedata_id')->primary();
-            $table->integer('student_id_gamedata');
+            $table->integer('gamedata_id')->primary();
+            $table->integer('student_id');
             $table->integer('total_damage');
             $table->integer('health_left');
             $table->integer('money');

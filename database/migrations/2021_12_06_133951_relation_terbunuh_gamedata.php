@@ -13,9 +13,9 @@ class RelationTerbunuhGamedata extends Migration
      */
     public function up()
     {
-        Schema::table('bio9_monster_terbunuh', function (Blueprint $table) {
-            $table->foreign('student_gamedata_id_terbunuh')
-            ->references('student_gamedata_id')->on('bio9_student_gamedata')
+        Schema::table('bio9_current_monster', function (Blueprint $table) {
+            $table->foreign('gamedata_id')
+            ->references('gamedata_id')->on('bio9_student_gamedata')
             ->onDelete('cascade')
             ->onUpdate('cascade');
         });
