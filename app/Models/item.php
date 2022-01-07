@@ -16,8 +16,8 @@ class item extends Model
     protected $fillable = [
         'item_id',
         'item_name',
-        'base_harga',
-        'penambahan_damage',
+        'price',
+        'attribute',
     ];
 
     public function getitemterbeli(){

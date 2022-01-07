@@ -240,6 +240,9 @@ function klikjawaban(){
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
                 
+                //Update Current Monster Data
+                UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                 //Update Game Data
                 UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
 
@@ -551,6 +554,9 @@ function klikjawaban(){
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
                 
+                //Update Current Monster Data
+                UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                 //Update Game Data
                 UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
 
@@ -861,6 +867,9 @@ function klikjawaban(){
                 $("#total_damage").html(total_damage);
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
+                
+                //Update Current Monster Data
+                UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
 
                 //Update Game Data
                 UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
@@ -1170,6 +1179,9 @@ function klikjawaban(){
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
                 
+                //Update Current Monster Data
+                UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
                 //Update Game Data
                 UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
 
@@ -1278,8 +1290,8 @@ function PostGameData(id){
         type: 'POST',
         dataType: 'JSON',
         data: { 
-            student_gamedata_id: id,
-            student_id_gamedata: id,
+            gamedata_id: id,
+            student_id: id,
             total_damage : 0,
             health_left : 3,
             money : 0,
@@ -1304,8 +1316,8 @@ function UpdateGameData(id, total_damage, health_left, money, time_left, current
         type: 'POST',
         dataType: 'JSON',
         data: { 
-            student_gamedata_id: id,
-            student_id_gamedata: id,
+            gamedata_id: id,
+            student_id: id,
             total_damage : total_damage,
             health_left : health_left,
             money : money,
@@ -1325,7 +1337,7 @@ function GetTerbunuh(id){
         dataType: 'json',
         url: "http://127.0.0.1:8000/getTerbunuh/"+id,
         success: function (data) {
-            randomMonster = data.monster_id_terbunuh;
+            randomMonster = data.monster_id;
             health_monster = data.monster_base_health;
             current_health_monster = data.monster_health_left;
 
@@ -1357,9 +1369,8 @@ function CreateTerbunuh(id){
         type: 'POST',
         dataType: 'JSON',
         data: { 
-            terbunuh_id: id,
-            monster_id_terbunuh: 1,
-            student_gamedata_id_terbunuh : id,
+            monster_id: 1,
+            gamedata_id : id,
             monster_base_health : 100,
             monster_health_left : 100
         },
@@ -1381,8 +1392,8 @@ function UpdateTerbunuh(id, monster_id, current_health_monster, health_monster){
         type: 'POST',
         dataType: 'JSON',
         data: { 
-            monster_id_terbunuh: monster_id,
-            student_gamedata_id_terbunuh : id,
+            monster_id: monster_id,
+            gamedata_id : id,
             monster_base_health : health_monster,
             monster_health_left : current_health_monster
         },

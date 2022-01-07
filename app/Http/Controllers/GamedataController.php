@@ -10,7 +10,7 @@ class GamedataController extends Controller
     
     public function getGameData($id)
     {
-       $gamedata = gamedata::where('student_id_gamedata',$id)->first();
+       $gamedata = gamedata::where('student_id',$id)->first();
        return response()->json($gamedata, 200);
     }
 
@@ -43,8 +43,8 @@ class GamedataController extends Controller
     public function store(Request $request)
     {
         gamedata::create([
-            'student_gamedata_id' => $request->student_gamedata_id,
-            'student_id_gamedata' => $request->student_id_gamedata,
+            'gamedata_id' => $request->gamedata_id,
+            'student_id' => $request->student_id,
             'total_damage' => $request->total_damage,
             'health_left' => $request->health_left,
             'money' => $request->money,
@@ -86,7 +86,7 @@ class GamedataController extends Controller
     {
         $gamedata = gamedata::findOrFail($id);
         $gamedata->update([
-            'student_id_gamedata' => $request->student_id_gamedata,
+            'student_id' => $request->student_id,
             'total_damage' => $request->total_damage,
             'health_left' => $request->health_left,
             'money' => $request->money,

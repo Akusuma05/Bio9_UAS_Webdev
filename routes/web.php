@@ -52,9 +52,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/updateGameData/{id}', 'App\Http\Controllers\GamedataController@update');
 
-    Route::get('/getTerbunuh/{id}', 'App\Http\Controllers\TerbunuhController@show');
+    Route::get('/getTerbunuh/{id}', 'App\Http\Controllers\CurrentMonsterController@show');
 
-    Route::post('/postTerbunuh', 'App\Http\Controllers\TerbunuhController@store');
+    Route::post('/postTerbunuh', 'App\Http\Controllers\CurrentMonsterController@create');
 
-    Route::post('/updateTerbunuh/{id}', 'App\Http\Controllers\TerbunuhController@update');
+    Route::post('/updateTerbunuh/{id}', 'App\Http\Controllers\CurrentMonsterController@update');
 });

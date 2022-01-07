@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\terbunuh;
+use App\Models\current_monster;
 use Illuminate\Http\Request;
 
-class TerbunuhController extends Controller
+class CurrentMonsterController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,10 +35,9 @@ class TerbunuhController extends Controller
      */
     public function store(Request $request)
     {
-        terbunuh::create([
-            'terbunuh_id' => $request->terbunuh_id,
-            'monster_id_terbunuh' => $request->monster_id_terbunuh,
-            'student_gamedata_id_terbunuh' => $request->student_gamedata_id_terbunuh,
+        current_monster::create([
+            'monster_id' => $request->monster_id,
+            'gamedata_id' => $request->gamedata_id,
             'monster_base_health' => $request->monster_base_health,
             'monster_health_left' => $request->monster_health_left
         ]);
@@ -52,8 +51,8 @@ class TerbunuhController extends Controller
      */
     public function show($id)
     {
-        $terbunuh = terbunuh::where('student_gamedata_id_terbunuh', $id)->first();
-        return response()->json($terbunuh, 200);
+        $current_monster = current_monster::where('gamedata_id', $id)->first();
+        return response()->json($current_monster, 200);
     }
 
     /**
@@ -76,10 +75,10 @@ class TerbunuhController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $terbunuh = terbunuh::where('terbunuh_id', $id);
-        $terbunuh->update([
-            'monster_id_terbunuh' => $request->monster_id_terbunuh,
-            'student_gamedata_id_terbunuh' => $request->student_gamedata_id_terbunuh,
+        $current_monster = current_monster::where('current_monster_id', $id);
+        $current_monster->update([
+            'monster_id' => $request->monster_id,
+            'gamedata_id' => $request->gamedata_id,
             'monster_base_health' => $request->monster_base_health,
             'monster_health_left' => $request->monster_health_left
         ]);
