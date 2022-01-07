@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\current_monster;
+use App\Models\monster;
 use Illuminate\Http\Request;
 
-class CurrentMonsterController extends Controller
+class MonsterController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,13 +35,7 @@ class CurrentMonsterController extends Controller
      */
     public function store(Request $request)
     {
-        current_monster::create([
-            'current_monster_id' => $request->current_monster_id,
-            'monster_id' => $request->monster_id,
-            'gamedata_id' => $request->gamedata_id,
-            'monster_base_health' => $request->monster_base_health,
-            'monster_health_left' => $request->monster_health_left
-        ]);
+        //
     }
 
     /**
@@ -52,8 +46,8 @@ class CurrentMonsterController extends Controller
      */
     public function show($id)
     {
-        $current_monster = current_monster::where('gamedata_id', $id)->first();
-        return response()->json($current_monster, 200);
+        $monster = monster::find($id);
+        return response()->json($monster, 200);
     }
 
     /**
@@ -76,14 +70,7 @@ class CurrentMonsterController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $current_monster = current_monster::where('current_monster_id', $id);
-        $current_monster->update([
-            
-            'monster_id' => $request->monster_id,
-            'gamedata_id' => $request->gamedata_id,
-            'monster_base_health' => $request->monster_base_health,
-            'monster_health_left' => $request->monster_health_left
-        ]);
+        //
     }
 
     /**

@@ -18,12 +18,4 @@ class current_monster extends Model
         'monster_base_health',
         'monster_health_left'
     ];
-
-    public function getmonster(){
-        return $this->belongsTo(monster::class, 'monster_id_terbunuh', 'monster_id');
-    }
-
-    public function getgamedata(){
-        return $this->belongsTo(gamedata::class, 'student_gamedata_id_terbunuh', 'student_gamedata_id');
-    }
 }

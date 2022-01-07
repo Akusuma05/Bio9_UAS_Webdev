@@ -54,7 +54,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/getTerbunuh/{id}', 'App\Http\Controllers\CurrentMonsterController@show');
 
-    Route::post('/postTerbunuh', 'App\Http\Controllers\CurrentMonsterController@create');
+    Route::post('/postTerbunuh', 'App\Http\Controllers\CurrentMonsterController@store');
 
     Route::post('/updateTerbunuh/{id}', 'App\Http\Controllers\CurrentMonsterController@update');
+    
+    Route::get('/getMonster/{id}', 'App\Http\Controllers\MonsterController@show');
+
+    Route::get('/getItem/{id}', 'App\Http\Controllers\ItemController@show');
 });
