@@ -246,16 +246,14 @@ function klikjawaban(){
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
                 
-                
+                //Update Current Monster Data
+                UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
 
                 //Update Game Data
                 UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
 
                 //Health Monster Habis
                 health_monster_habis()
-
-                //Update Current Monster Data
-                UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
 
                 button_pressed = 1;
                 PertanyaanListPertama(); 
@@ -462,16 +460,14 @@ function klikjawaban(){
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
                 
-                
+                //Update Current Monster Data
+                UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
 
                 //Update Game Data
                 UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
 
                 //Health Monster Habis
                 health_monster_habis()
-
-                //Update Current Monster Data
-                UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
 
                 button_pressed = 1;
                 PertanyaanListPertama(); 
@@ -678,16 +674,14 @@ function klikjawaban(){
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
                 
-                
+                //Update Current Monster Data
+                UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
 
                 //Update Game Data
                 UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
 
                 //Health Monster Habis
                 health_monster_habis()
-
-                //Update Current Monster Data
-                UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
 
                 button_pressed = 1;
                 PertanyaanListPertama(); 
@@ -891,16 +885,14 @@ function klikjawaban(){
                 progressBarFull.style.width = (((current_health_monster - current_damage)*100)/health_monster) + '%';
                 current_health_monster -= current_damage;
                 
-                
+                //Update Current Monster Data
+                UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
 
                 //Update Game Data
                 UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
 
                 //Health Monster Habis
                 health_monster_habis()
-
-                //Update Current Monster Data
-                UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
 
                 button_pressed = 1;
                 PertanyaanListPertama();  
@@ -975,8 +967,6 @@ function health_monster_habis(){
         document.getElementById('jawaban4').style.visibility = 'hidden';
         document.getElementById('question').style.visibility = 'hidden';
 
-        
-
         shop();
 
         GetMonsterDeath(randomMonster);
@@ -987,11 +977,11 @@ function health_monster_habis(){
         current_health_monster = health_monster;
         progressBarFull.style.width = '100%';
 
-        //Update Game Data
-        UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
-
         //Update Current Monster Data
         UpdateTerbunuh(gamedata_id, randomMonster, current_health_monster, health_monster);
+
+        //Update Game Data
+        UpdateGameData(gamedata_id, total_damage, health_user, money, time_to_database, current_damage);
     }
 }
 
@@ -1112,7 +1102,7 @@ function GetMonsterDeath($id){
                 setTimeout(function(){
                     randomMonster = Math.floor(Math.random() * 5) + 1;
                     GetMonsterIdle(randomMonster);
-            }, 1100);            
+            }, 1100);
         }
         }
     });
